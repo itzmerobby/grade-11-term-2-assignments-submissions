@@ -1,0 +1,9 @@
+1. What is the difference between WriteAllText() and AppendAllText()?
+  WriteAllText(...) overwrites / replaces the contents of the file while AppendAllText(...) appends / adds more content to the file. In AppendAllText(...), the original file content is preserved, and content is only added, not replaced.
+2. What does new StreamWriter(path, true) mean?
+  It means "create a stream / file writer that only appends content, not replace it". the second argument with value `true` is a boolean parameter named `append`, which is a flag for triggering append mode, meaning, "add to the content", not "delete the current file content, and add the following contents to this file".
+3. Why should an attendance logger append instead of overwrite?
+  Append mode is more appropriate for an attendance logger because logs are incremental, meaning they do not replace each other, they pile up and they are added after the previous log entries.
+4. Name two exceptions that may occur during file operations.
+  FileNotFoundException
+  UnauthorizedAccessException

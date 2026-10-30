@@ -1,0 +1,134 @@
+Walkthrough
+
+#pragma warning disable IDE0005
+using System;
+using System.IO;
+
+#region Actual Logic
+internal static class Program
+{
+    internal static void Main()
+    {
+        OutputPath.EnsureOutputDirectoryExists();
+
+        Console.WriteLine("""
+        +======================================+
+        |        STUDENT NOTES READER          |
+        +======================================+
+        """.Trim());
+        Console.WriteLine(); // <-- a hardcoded header for simplicity.
+
+        string fp = OutputPath.For("study-notes.txt"); // <-- get the file path.
+        string[] linesOfNotes; // <-- declare, not declare-initialize in try-catch to reduce code nesting.
+
+        try
+        {
+            // ReadAllLines is chosen here because the problem explicitly required counting the number of lines,
+            // which is more convenient when done via ReadAllLines, also lets me format the notes for better display.
+            linesOfNotes = File.ReadAllLines(fp);
+        } catch (FileNotFoundException) // <-- when the file does not exist.
+        {
+            Logger.Error($"Please create '{fp}' first before running this program."); // <-- print a friendly error message.
+            return;
+        } catch (IOException)
+        {
+            Logger.Error("Something went wrong while reading the file."); // <-- the list of possible errors is long, so a generic IOException catch will handle the rest of the errors.
+            return;
+        }
+
+        // display the notes, with formatting.
+        Logger.Info($"Notes: \n  {string.Join("\n  ", linesOfNotes)}");
+        Logger.Info($"Line count in notes: {linesOfNotes.Length}");
+    }
+}
+#endregion
+
+#region Shared Utilities
+internal static class OutputPath
+{
+    internal static string OutputFolder = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "quejada",
+            "out"
+        );
+
+    internal static void EnsureOutputDirectoryExists()
+    {
+        Directory.CreateDirectory(OutputFolder);
+    }
+
+    internal static string For(string fileName) =>
+        Path.Combine(
+            OutputFolder,
+            fileName
+        );
+}
+
+internal static class Input
+{
+    internal static string Text(string label)
+    {
+        Console.ForegroundColor = ConsoleColor.Blue;
+        Console.Write(label);
+        Console.ForegroundColor = ConsoleColor.Gray;
+        string inp = Console.ReadLine() ?? "";
+        Console.ResetColor();
+        return inp;
+    }
+
+    internal static T OfType<T>(string label) where T : IParsable<T>
+    {
+        return T.Parse(Text(label), provider: null);
+    }
+
+    internal static T OfType<T>(string label, Func<string, T> convert)
+    {
+        return convert(Text(label));
+    }
+}
+
+
+internal static class Logger
+{
+    internal static void Info(string message) =>
+        Write("INFO", ConsoleColor.Cyan, message);
+
+    internal static void Warn(string message) =>
+        Write("WARN", ConsoleColor.Yellow, message);
+
+    internal static void Error(string message) =>
+        Write("ERROR", ConsoleColor.Red, message);
+
+    private static void Write(string label, ConsoleColor color, string message)
+    {
+        Console.ForegroundColor = color;
+        Console.Write($"[{label}] ");
+        Console.ResetColor();
+        Console.WriteLine(message);
+    }
+}
+#endregion
+
+All tests passes.
+
+Exit Ticket
+
+1. What is the difference between ReadAllText() and ReadAllLines()?
+  ReadAllLines() returns a string array containing the lines of content in the file.
+
+2. When might StreamReader be a better choice?
+  When reading arbitrary large files (where we cannot know for sure that the file content fits all at once in memory.), useful for tools such as compilers.
+
+3. What does ReadLine() return when there is no more text?
+  null.
+
+4. Name two possible file-reading errors.
+  FileNotFoundException
+  UnauthorizedAccessException
+
+5. Which test did you perform, and what did it prove?
+  Missing file test. I deleted the required file to test if it fails gracefully, and it did. proving that the error handling works.
+
+6. If your program works, explain one line of code and why it is needed.
+  linesOfNotes = File.ReadAllLines(fp);
+  The line above is the core of the application. It is what reads the file, without it, the file will not read the contents of the required file, breaking the core functionality of the program.

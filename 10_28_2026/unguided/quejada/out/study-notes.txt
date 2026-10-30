@@ -1,5 +1,0 @@
-Study notes ng Cute
-true is true
-false is false
-true is not false
-reminder: cute si quejada.

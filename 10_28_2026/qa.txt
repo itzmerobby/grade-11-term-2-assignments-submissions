@@ -1,0 +1,13 @@
+Mini Challenge
+
+1. How many times can the loop run for a 3-line file?
+  3 times.
+
+2. What value ends the loop?
+  null.
+
+3. Why is using(...) helpful?
+  It automatically disposes the StreamReader instance after the block of code inside its curly braces runs.
+
+4. How is this different from ReadAllLines()?
+  This streams the file content from disk to memory line by line instead of giving all the lines all at once in a single string array. This makes it more memory efficient when reading large files.

@@ -26,6 +26,10 @@ internal static class Program
         {
             Logger.Error($"Please create '{fp}' first before running this program.");
             return;
+        } catch (IOException)
+        {
+            Logger.Error("Something went wrong while reading the file.");
+            return;
         }
 
         Logger.Info($"Notes: \n  {string.Join("\n  ", linesOfNotes)}");

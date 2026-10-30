@@ -1,0 +1,2 @@
+1.Why is ReadAllLines() more convenient than ReadAllText() for counting lines?
+  ReadAllLines() is more convenient than ReadAllText() because it returns a string array containing the individual lines of the specified file, which we can use .Length property to easily count the number of lines in the file.

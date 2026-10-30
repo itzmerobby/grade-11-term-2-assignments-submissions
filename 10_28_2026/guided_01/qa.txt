@@ -1,0 +1,5 @@
+1. Why is ReadAllText() suitable here?
+  Since there is no requirement that needs processing of lines of the file, we can just read the content of the whole file as a single string instead of an string array.
+  ReadAllLines(), or the more specialized ReadAllBytes() are used for more complex use cases, such as but not limited to lexers and tokenizers which requires a more fine grained processing of the contents of the file such as per-line, per-character, or per-byte processing.
+2. Explain the code and the test.
+  The code uses a helper to generate a file path from a single file name, which in this case has value "announcements.txt". The code then reads this file using ReadAllText(), and prints the contents to the console. The test is straightforward, literally create announcements.txt in `C:\Users\<UserName>\Documents\quejada\out` or `<FolderRoot>/10_28_2026/quejada/out` in linux (Ubuntu, i was using WSL), then run the program, the program should be able to read the file correctly, after running, delete the file, then the program should print a user-friendly message telling the user to create the required file.
